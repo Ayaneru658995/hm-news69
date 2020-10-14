@@ -27,7 +27,8 @@ const router = new VueRouter({
 
 // 全局前置守卫
 router.beforeEach((to, from, next) => {
-  if (to.path === '/user') {
+  const authPath =  ['/user','/my-follow','/my-comment','/my-star','/edit']
+  if (authPath.includes(to.path)) {
     let token = localStorage.getItem('token')
     if (token) {
       next()
