@@ -17,7 +17,7 @@
     <van-cell-group>
       <van-cell @click="$router.push('/my-follow')" title="我的关注" is-link value="关注的用户" />
       <van-cell @click="$router.push('/my-comment')" title="我的跟帖" is-link value="跟帖/回复" />
-      <van-cell title="我的收藏" is-link value="文档/视频" />
+      <van-cell @click="$router.push('/my-star')" title="我的收藏" is-link value="文档/视频" />
       <van-cell @click="$router.push('/edit')" title="设置" is-link  />
       <van-cell @click='logout' title="退出" is-link  />
     </van-cell-group>

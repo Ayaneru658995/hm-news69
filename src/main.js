@@ -10,6 +10,7 @@ import router from './router/index.js'
 import HmHeader from './components/HmHeader.vue'
 import HmLogo from './components/HmLogo.vue'
 import HmButton from './components/HmButton.vue'
+import HmPost from './components/HmPost.vue'
 // 引入字体图标
 import './styles/iconfont.css'
 
@@ -17,6 +18,7 @@ import './styles/iconfont.css'
 Vue.component('hm-header', HmHeader)
 Vue.component('hm-logo', HmLogo)
 Vue.component('hm-button', HmButton)
+Vue.component('hm-post', HmPost)
 
 // 按需引入组件
 import { Field, Toast, Cell, CellGroup, Dialog, Radio, RadioGroup, Uploader, List } from 'vant'
