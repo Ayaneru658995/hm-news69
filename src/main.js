@@ -21,7 +21,7 @@ Vue.component('hm-button', HmButton)
 Vue.component('hm-post', HmPost)
 
 // 按需引入组件
-import { Field, Toast, Cell, CellGroup, Dialog, Radio, RadioGroup, Uploader, List } from 'vant'
+import { Field, Toast, Cell, CellGroup, Dialog, Radio, RadioGroup, Uploader, List, Tab, Tabs, PullRefresh } from 'vant'
 
 Vue.use(Field)
 Vue.use(Toast)
@@ -32,10 +32,13 @@ Vue.use(Radio)
 Vue.use(RadioGroup)
 Vue.use(Uploader)
 Vue.use(List)
+Vue.use(Tab)
+Vue.use(Tabs)
+Vue.use(PullRefresh)
 
 // 注册一个全局过滤器
 import moment from 'moment'
-Vue.filter('date', (val, format='YYYY-MM-DD') => {
+Vue.filter('date', (val, format = 'YYYY-MM-DD') => {
   return moment(val).format(format)
 })
 
@@ -43,8 +46,8 @@ Vue.filter('date', (val, format='YYYY-MM-DD') => {
 import axios from 'axios'
 
 // 添加axios基准地址
-axios.defaults.baseURL='http://localhost:3000'
-  
+axios.defaults.baseURL = 'http://localhost:3000'
+
 Vue.prototype.$axios = axios
 
 // 设置请求拦截器
