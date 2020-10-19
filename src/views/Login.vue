@@ -96,7 +96,12 @@ export default {
             // 2. 提示
             this.$toast.success(message)
             // 3. 跳转
-            this.$router.push('/user')
+            // 登录成功后 
+            if(this.$route.params.back){
+               this.$router.back()
+            }else {
+               this.$router.push('/user')
+            }
           } else {
             this.$toast.fail(message)
           }

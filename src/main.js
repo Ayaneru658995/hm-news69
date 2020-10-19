@@ -21,7 +21,7 @@ Vue.component('hm-button', HmButton)
 Vue.component('hm-post', HmPost)
 
 // 按需引入组件
-import { Field, Toast, Cell, CellGroup, Dialog, Radio, RadioGroup, Uploader, List, Tab, Tabs, PullRefresh } from 'vant'
+import { Field, Toast, Cell, CellGroup, Dialog, Radio, RadioGroup, Uploader, List, Tab, Tabs, PullRefresh, Sticky } from 'vant'
 
 Vue.use(Field)
 Vue.use(Toast)
@@ -35,6 +35,7 @@ Vue.use(List)
 Vue.use(Tab)
 Vue.use(Tabs)
 Vue.use(PullRefresh)
+Vue.use(Sticky)
 
 // 注册一个全局过滤器
 import moment from 'moment'
