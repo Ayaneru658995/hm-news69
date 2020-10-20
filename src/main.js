@@ -11,18 +11,24 @@ import HmHeader from './components/HmHeader.vue'
 import HmLogo from './components/HmLogo.vue'
 import HmButton from './components/HmButton.vue'
 import HmPost from './components/HmPost.vue'
+import HmComment from './components/HmComment.vue'
+import HmFloor from './components/HmFloor.vue'
 // 引入字体图标
 import './styles/iconfont.css'
 
 // 注册全局组件
+Vue.component('hm-floor', HmFloor)
+Vue.component('hm-comment', HmComment)
 Vue.component('hm-header', HmHeader)
 Vue.component('hm-logo', HmLogo)
 Vue.component('hm-button', HmButton)
 Vue.component('hm-post', HmPost)
 
 // 按需引入组件
-import { Field, Toast, Cell, CellGroup, Dialog, Radio, RadioGroup, Uploader, List, Tab, Tabs, PullRefresh, Sticky } from 'vant'
+import { Field, Toast, Cell, CellGroup, Dialog, Radio, RadioGroup, Uploader, List, Tab, Tabs, PullRefresh, Sticky, Icon } from 'vant'
 
+
+Vue.use(Icon)
 Vue.use(Field)
 Vue.use(Toast)
 Vue.use(Cell)

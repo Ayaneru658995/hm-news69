@@ -33,6 +33,39 @@
           <i>{{detail.like_length}}</i>
         </div>
       </div>
+      <!-- 评论 -->
+      <div class="comments">
+        <!-- 评论组件 -->
+        <hm-comment
+          v-for="comment in commentsList"
+          :key="comment.id"
+          :comment = "comment"
+        ></hm-comment>
+      </div>
+      <!-- 底部 -->
+      <div class="footer">
+        <!-- input -->
+        <div class="input" v-if="!isShow">
+          <div class="left">
+            <input ref="input" @focus="handleFocus" type="text" placeholder="写跟帖">
+          </div>
+          <div class="center">
+            <van-icon name="chat-o" badge="9"></van-icon>
+          </div>
+          <div class="right">
+            <van-icon name="star-o"></van-icon>
+          </div>
+        </div>
+        <!-- textarea -->
+        <div class="textarea" v-else>
+          <div class="left">
+            <textarea ref="textarea" @blur="handleBlur" placeholder="请输入内容"></textarea>
+          </div>
+          <div class="right">
+            <div class="send">发送</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -41,12 +74,19 @@
 export default {
   data(){
     return {
-      detail: {}
+      detail: {},
+      commentsList: [],
+      isShow: false,// 控制textarea显示与否
     }
   },
   created(){
     console.log('详情页', this.$route.params.id);
     this.getDetail()
+    this.getComments()
+  },
+  mounted(){
+    // ref 绑定
+    console.log('11111', this.$refs);
   },
   methods: {
     // 获取文章详情
@@ -111,6 +151,21 @@ export default {
       this.$toast.success(res.data.message)
       //重新加载
       this.getDetail()
+    },
+    //获取评论列表
+    async getComments(){
+      let res = await this.$axios.get(`/post_comment/${this.$route.params.id}`)
+      console.log('评论列表', res.data.data);
+      this.commentsList = res.data.data
+    },
+    //聚焦
+    handleFocus(){
+      // 1.textarea显示
+      this.isShow = true
+    },
+    //失焦
+    handleBlur(){
+      this.isShow = false
     }
   }
 }
@@ -191,6 +246,82 @@ export default {
       border: 1px solid #f00;
       i {
         color: red;
+      }
+    }
+  }
+  //评论部分
+  .comments {
+    border-top: 3px solid #ccc;
+    padding-bottom: 40px;
+  }
+  // 底部
+  .footer {
+  background: #fff;
+  border-top: 1px solid #ccc;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+    .input {
+    height: 40px;
+    display: flex;
+    .left {
+      flex: 1;
+      // background: red;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      input {
+        height: 30px;
+        width: 80%;
+        border: none;
+        border-radius: 15px;
+        background: #ddd;
+        text-indent: 1em;
+      }
+    }
+    .center,
+    .right {
+      width: 60px;
+      font-size: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    }
+  }
+  .textarea {
+    height: 70px;
+    display: flex;
+    .left {
+      flex: 1;
+      // background: pink;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      textarea {
+        border: none;
+        width: 90%;
+        height: 75%;
+        border-radius: 8px;
+        resize: none;
+        background: #ddd;
+        text-indent: 1em;
+        padding-top: 5px;
+      }
+    }
+    .right {
+      width: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .send {
+        background: #f00;
+        color: #fff;
+        width: 40px;
+        height: 30px;
+        border-radius: 5px;
+        line-height: 30px;
+        text-align: center;
       }
     }
   }
