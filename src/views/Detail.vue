@@ -17,7 +17,7 @@
     <div class="container">
       <div class="title line2">{{detail.title}}</div>
       <div class="name">
-        <span>新华网</span>
+        <span>{{ detail.user.nickname }}</span>
         <span>{{detail.create_date|date}}</span>
       </div>
       <!-- 内容部分 -->
@@ -33,6 +33,8 @@
           <i>{{detail.like_length}}</i>
         </div>
       </div>
+      <!-- 添加空盒子,以便跳转到该位置 -->
+      <div ref='box'></div>
       <!-- 评论 -->
       <div class="comments">
         <!-- 评论组件 -->
@@ -50,19 +52,19 @@
             <input ref="input" @focus="handleFocus" type="text" placeholder="写跟帖">
           </div>
           <div class="center">
-            <van-icon name="chat-o" badge="9"></van-icon>
+            <van-icon name="chat-o" :badge="detail.comment_length"></van-icon>
           </div>
           <div class="right">
-            <van-icon name="star-o"></van-icon>
+            <van-icon name="star-o" @click="star" :class="{active: detail.has_star}"></van-icon>
           </div>
         </div>
         <!-- textarea -->
         <div class="textarea" v-else>
           <div class="left">
-            <textarea ref="textarea" @blur="handleBlur" placeholder="请输入内容"></textarea>
+            <textarea v-model="content" ref="textarea" @blur="handleBlur" :placeholder="replyName? '回复 : '+ replyName : '请输入内容'"></textarea>
           </div>
           <div class="right">
-            <div class="send">发送</div>
+            <div class="send" @touchstart="send">发送</div>
           </div>
         </div>
       </div>
@@ -74,15 +76,31 @@
 export default {
   data(){
     return {
-      detail: {},
+      detail: {
+        user: {}
+      },
       commentsList: [],
       isShow: false,// 控制textarea显示与否
+      replyId: '', //回复id
+      replyName: '', //回复昵称
+      content: '', //textarea内容
     }
   },
   created(){
     console.log('详情页', this.$route.params.id);
     this.getDetail()
     this.getComments()
+
+    //注册事件
+    this.$bus.$on('reply', async (replyId, replyName) => {
+      //保存
+      this.replyId = replyId  //用来发送
+      this.replyName = replyName // 它的作用仅仅就是为了显示在 textarea 里面
+      //显示textarea
+      this.isShow = true
+      await this.$nextTick()
+      this.$refs.textarea.focus()
+    })
   },
   mounted(){
     // ref 绑定
@@ -159,13 +177,52 @@ export default {
       this.commentsList = res.data.data
     },
     //聚焦
-    handleFocus(){
-      // 1.textarea显示
+    async handleFocus(){
+      // 1.textarea显示 => 数据更新, 更新视图是异步的
       this.isShow = true
+      // 2.聚焦
+      await this.$nextTick()
+      this.$refs.textarea.focus()
     },
     //失焦
     handleBlur(){
       this.isShow = false
+      if(!this.content) {
+        this.replyId = ''
+        this.replyName = ''
+      }  
+    },
+    //发布评论
+    async send(){
+      console.log('点击发送');
+      let res = await this.$axios.post(`/post_comment/${this.$route.params.id}`,{
+        content: this.content,
+        parent_id: this.replyId
+      })
+      console.log('评论结果', res.data);
+      const { statusCode, message } = res.data
+      if(statusCode == 200) {
+        // 1. 提示
+        this.$toast.success(message)
+        // 2. 重新请求评论
+        this.getComments()
+        // 3. 清空
+        this.content = ''
+        this.replyId = ''
+        this.replyName = ''
+
+        // 4. textarea隐藏
+        this.isShow = false
+        // 5. 发表评论成功, 跳转
+        let element = this.$refs.box
+        element.scrollIntoView() 
+      }
+    },
+    //收藏
+    async star(){
+      let res = await this.$axios.get(`/post_star/${this.$route.params.id}`)
+      this.$toast.success(res.data.message)
+      this.getDetail()
     }
   }
 }
@@ -286,6 +343,9 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      .active {
+        color: #f00;
+      }
     }
     }
   }

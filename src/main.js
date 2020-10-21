@@ -57,6 +57,10 @@ axios.defaults.baseURL = 'http://localhost:3000'
 
 Vue.prototype.$axios = axios
 
+//创建bus
+const bus = new Vue()
+Vue.prototype.$bus = bus
+
 // 设置请求拦截器
 axios.interceptors.request.use(config => {
   let token = localStorage.getItem('token')

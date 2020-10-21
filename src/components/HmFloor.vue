@@ -10,7 +10,7 @@
       <div class="header">
         <div class="left">{{ count }}楼 {{ parent.user.nickname }}</div>
         <div class="center">{{ parent.create_date }}</div>
-        <div class="right">回复</div>
+        <div class="right" @click="reply">回复</div>
       </div>
       <div class="content">
         {{ parent.content }}
@@ -22,7 +22,14 @@
 <script>
 export default {
   props: ['parent', 'count'],
-  name: 'hm-floor'
+  name: 'hm-floor',
+  methods: {
+    //楼层里面的回复
+    reply(){
+      console.log('楼层里面的回复');
+      this.$bus.$emit('reply', this.parent.id, this.parent.user.nickname)
+    }  
+  }
 }
 </script>
 

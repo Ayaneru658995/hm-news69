@@ -46,6 +46,7 @@
 
 <script>
 export default {
+  name: 'home',
   data() {
     return {
       active: 1, // 初始tab页码
