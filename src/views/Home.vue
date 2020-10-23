@@ -74,10 +74,28 @@ export default {
   created() {
     this.getTabsList()
   },
-
+  activated(){
+    console.log('activated');
+    // 从本地获取
+    let activeTabs = JSON.parse(localStorage.getItem('activeTabs'))
+    if(activeTabs){
+      this.tabsList = activeTabs
+      this.active = 1 // 恢复默认是最合适的
+      this.getPostList(this.tabsList[this.active].id)
+      return 
+    }
+  },
   methods: {
     // 获取tab列表
     async getTabsList() {
+      // 从本地获取
+      let activeTabs = JSON.parse(localStorage.getItem('activeTabs'))
+      if(activeTabs){
+        this.tabsList = activeTabs
+        this.getPostList(this.tabsList[this.active].id)
+        return 
+      }
+      //发送请求
       let res = await this.$axios.get('/category')
       // console.log("tab栏", res.data.data);
       this.tabsList = res.data.data
