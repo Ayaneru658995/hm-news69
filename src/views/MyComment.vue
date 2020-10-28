@@ -3,20 +3,26 @@
   <div>
     <hm-header>我的跟帖</hm-header>
     <!-- 列表 -->
-    <van-list v-model="loading" :finished="finished" @load="onload" :immediate-check="false" finished-text="没有更多数据了">
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      @load="onload"
+      :immediate-check="false"
+      finished-text="没有更多数据了"
+    >
       <div class="item" v-for="item in list" :key="item.id">
-        <div class="date">{{item.create_date| date}}</div>
+        <div class="date">{{ item.create_date | date }}</div>
         <div class="parent" v-if="item.parent">
           <div class="parent-nickname">
-            回复 : {{item.parent.user.nickname}}
+            回复 : {{ item.parent.user.nickname }}
           </div>
           <div class="parent-content line2">
-            {{item.parent.content}}
+            {{ item.parent.content }}
           </div>
         </div>
-        <div class="content">{{item.content}}</div>
+        <div class="content">{{ item.content }}</div>
         <div class="post">
-          <div class="title line1">{{item.post.title}}</div>
+          <div class="title line1">{{ item.post.title }}</div>
           <i class="iconfont iconjiantou1"></i>
         </div>
       </div>
@@ -34,38 +40,38 @@ export default {
       // false : 说明上一次加载完成了,我们可以加载更多, 触发 onLoad
       // true  : 说明上一次加载正在进行中, 我们不可能加载更多,不能触发 onLoad
       finished: false, //是否全部加载完成
-    }
+    };
   },
   created() {
-    this.getMyComments()
+    this.getMyComments();
   },
   methods: {
     // 获取评论/跟帖
-    async getMyComments(){
-      let res = await this.$axios.get('/user_comments', {
+    async getMyComments() {
+      let res = await this.$axios.get("/user_comments", {
         params: {
           pageIndex: this.pageIndex, //页码1
           pageSize: 5, //每页的条数
         },
-      })
+      });
       // 请求成功 , 记得loading:false
-      if(res.data.statusCode===200) {
-        console.log('评论列表',res);
-        this.loading = false
-        if(res.data.data.length < 5) {
-          this.finished = true
+      if (res.data.statusCode === 200) {
+        console.log("评论列表", res);
+        this.loading = false;
+        if (res.data.data.length < 5) {
+          this.finished = true;
         }
-        this.list = [...this.list, ...res.data.data]
+        this.list = [...this.list, ...res.data.data];
       }
     },
     // 触底触发 --将要加载更多
     onload() {
-      console.log('到底了, 加载更多');
-      this.pageIndex++ //2
-      this.getMyComments() //加载第二页数据
-    }
-  }
-}
+      console.log("到底了, 加载更多");
+      this.pageIndex++; //2
+      this.getMyComments(); //加载第二页数据
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
