@@ -1,19 +1,16 @@
 <template>
-  <div>
-    <keep-alive :include="cacheList">
-      <router-view></router-view>
-    </keep-alive>
-  </div>
+  <keep-alive :include="cacheList">
+    <router-view></router-view>
+  </keep-alive>
 </template>
 
 <script>
-export default {};
+import { mapState } from "vuex";
+export default {
+  computed: {
+    ...mapState(["cacheList"]),
+  },
+};
 </script>
 
-<style lang="less">
-.one {
-  width: 200px;
-  height: 200px;
-  background-color: violet;
-}
-</style>
+<style></style>

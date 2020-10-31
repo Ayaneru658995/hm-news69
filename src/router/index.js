@@ -1,17 +1,20 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // 导入组件
-import Login from '../views/Login.vue'
-import Register from '../views/Register.vue'
-import User from '../views/User.vue'
-import Edit from '../views/Edit.vue'
-import MyFollow from '../views/MyFollow.vue'
-import MyComment from '../views/MyComment.vue'
-import MyStar from '../views/MyStar.vue'
 import Home from '../views/Home.vue'
-import Detail from '../views/Detail.vue'
-import TabsEdit from '../views/TabsEdit.vue'
-import Search from '../views/Search.vue'
+// 把组件分别打包
+const Login = () => import('../views/Login.vue')
+const Register = () => import('../views/Register.vue')
+const User = () => import('../views/User.vue')
+const Edit = () => import('../views/Edit.vue')
+const MyFollow = () => import('../views/MyFollow.vue')
+const MyComment = () => import('../views/MyComment.vue')
+const MyStar = () => import('../views/MyStar.vue')
+const Detail = () => import('../views/Detail.vue')
+// 把 TabsEdit 和 Search一起打包
+const TabsEdit = () => import(/* webpackChunkName: "mg" */'../views/TabsEdit.vue')
+const Search = () => import(/* webpackChunkName: "mg" */'../views/Search.vue')
+
 
 // 注册
 Vue.use(VueRouter)
@@ -23,13 +26,13 @@ const router = new VueRouter({
     { path: '/register', name: 'register', component: Register },
     { path: '/user', name: 'user', component: User },
     { path: '/edit', name: 'edit', component: Edit },
-    { path: '/my-follow', name: 'my-follow', component: MyFollow},
-    { path: '/my-comment', name: 'my-comment', component: MyComment},
+    { path: '/my-follow', name: 'my-follow', component: MyFollow },
+    { path: '/my-comment', name: 'my-comment', component: MyComment },
     { path: '/my-star', name: 'my-star', component: MyStar },
     { path: '/home', name: 'home', component: Home },
     { path: '/detail/:id', name: 'detail', component: Detail },
     { path: '/tabsedit', name: 'tabsedit', component: TabsEdit },
-    { path: '/search', name: 'search', component: Search}
+    { path: '/search', name: 'search', component: Search }
   ],
 })
 
@@ -41,7 +44,7 @@ VueRouter.prototype.push = function push(location) {
 
 // 全局前置守卫
 router.beforeEach((to, from, next) => {
-  const authPath =  ['/user','/my-follow','/my-comment','/my-star','/edit']
+  const authPath = ['/user', '/my-follow', '/my-comment', '/my-star', '/edit']
   if (authPath.includes(to.path)) {
     let token = localStorage.getItem('token')
     if (token) {

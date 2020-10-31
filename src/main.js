@@ -6,6 +6,12 @@ import './styles/base.less'
 import 'lib-flexible'
 // 导入路由对象
 import router from './router/index.js'
+//引入vuex
+import store from './store/index'
+
+//忽略打印
+console.log = () => { }
+
 // 引入子组件
 import HmHeader from './components/HmHeader.vue'
 import HmLogo from './components/HmLogo.vue'
@@ -68,18 +74,22 @@ Vue.filter('date1', r => {
 
 // 把axios挂载到vue原型上面
 import axios from 'axios'
-
-// 添加axios基准地址
-axios.defaults.baseURL = 'http://localhost:3000'
-
-Vue.prototype.$axios = axios
+//添加基准地址
+//开发阶段的基准地址 : 'http://localhost:3000'
+//发布阶段......... : 'http://xiaomage.com'
+//console.log(process.env.NODE_ENV);  //打印环境 (开发还是生产)
+const api = axios.create({
+  baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'http://xiaomage.com'
+})
+// axios.defaults.baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'http://xiaomage.com'
+Vue.prototype.$axios = api
 
 //创建bus
 const bus = new Vue()
 Vue.prototype.$bus = bus
 
 // 设置请求拦截器
-axios.interceptors.request.use(config => {
+api.interceptors.request.use(config => {
   let token = localStorage.getItem('token')
   if (token) {
     config.headers.Authorization = token
@@ -88,7 +98,7 @@ axios.interceptors.request.use(config => {
 })
 
 // 设置响应拦截器
-axios.interceptors.response.use(res => {
+api.interceptors.response.use(res => {
   const { statusCode, message } = res.data
 
   if (statusCode === 401 && message === '用户信息验证失败') {
@@ -104,6 +114,15 @@ axios.interceptors.response.use(res => {
 Vue.config.productionTip = false
 
 new Vue({
+  store,
   router,
   render: h => h(App),
 }).$mount('#app')
+
+//演示跨域
+// axios.get('https://news-at.zhihu.com/api/4/news/latest').then(res => {
+//   console.log(res)
+// })
+axios.get('/mgapi/api/4/news/latest').then(res => {
+  console.log('跨域', res)
+})
